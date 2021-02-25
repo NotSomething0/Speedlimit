@@ -1,7 +1,4 @@
-local playerPed = PlayerPedId()
-
-local speedlimitText = "~p~Speedlimit: ~w~%s~p~ mph"
-
+local shouldShowSpeedlimit = true
 local speedLimits = {
     ["Joshua Rd"] = 50,
     ["East Joshua Road"] = 50,
@@ -221,15 +218,26 @@ local speedLimits = {
     ["Meringue Ln"] = 35,
     ["Strangeways Dr"] = 30
 }
+local speedlimit
+RegisterCommand('+speedlimit', function(source, args, rawCommand)
+    shouldShowSpeedlimit = not shouldShowSpeedlimit
+    SendNuiMessage({
+        status = shouldShowSpeedlimit
+    })
+end, false)
 
-local speedlimit = "~r~~h~You havent Done this street!"
-local speedlimitshow = true
+RegisterKeyMapping('+speedlimit', 'Toggle the speedlimit text in the hud.', 'keyboard', 'b')
+
+local playerPed = PlayerPedId()
+
+local speedlimitText = "~p~Speedlimit: ~w~%s~p~ mph"
+
 CreateThread(function()
     while true do
-        Wait(2000)
+        Wait(1500)
         local playerCoords = GetEntityCoords(playerPed)
         local streethash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
-        street = GetStreetNameFromHashKey(streethash)
+        local street = GetStreetNameFromHashKey(streethash)
     
         if speedLimits[street] then
             speedlimit = speedLimits[street]
@@ -242,39 +250,30 @@ end)
 
 CreateThread(function()
     while true do
-        Wait(0)
-        if IsPedInAnyVehicle(playerPed) then
-            if speedlimitshow == true then
-                DrawTxt(1.160, 0.500, 1.0,1.0,0.55,speedlimitText:format(speedlimit), 255,255,255,255)
-            else
-                Wait(500)
-            end
+        Wait(1000)
+        if IsPedInAnyVehicle(playerPed) and shouldShowSpeedlimit then
+            SendNuiMessage({
+                limit = speedlimit
+            })
+            -- DrawTxt(1.160, 0.500, 1.0,1.0,0.55,speedlimitText:format(speedlimit), 255,255,255,255)
+        else
+            Wait(1000)
         end
     end
 end)
 
 --[[
-if IsControlJustPressed(0, 29) then
-    if speedlimitshow == true then
-        speedlimitshow = false
+local intText = false
+function DrawTxt(x,y ,width,height,scale, text, r,g,b,a)
+    if not intText then
+        SetTextFont(6)
+        SetTextScale(scale, scale)
+        SetTextColour(r, g, b, a)
+        SetTextOutline()
     else
-        speedlimitshow = true
+        BeginTextCommandDisplayText("STRING")
+        AddTextComponentSubstringPlayerName(text)
+        EndTextCommandDisplayText(x - width/2, y - height/2 + 0.005)
     end
 end
 --]]
-
-function DrawTxt(x,y ,width,height,scale, text, r,g,b,a)
-    SetTextFont(6)
-    SetTextScale(scale, scale)
-    SetTextColour(r, g, b, a)
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(x - width/2, y - height/2 + 0.005)
-end
-
-RegisterCommand('+speedlimit', function(source, args, rawCommand)
-    speedlimitshow = not speedlimitshow
-end, false)
-
-RegisterKeyMapping('+speedlimit', 'Toggle the speedlimit text in the hud.', 'keyboard', 'b')
