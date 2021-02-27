@@ -2,8 +2,12 @@ fx_version 'cerulean'
 
 game 'gta5'
 
-description 'A Big Yoda Production'
+client_script 'client.lua'
 
-client_scripts {
-    "cl_speed.lua",
+ui_page 'html/index.html'
+
+files {
+    'html/index.js',
+    'html/style.css',
+    'html/SPEED-LIMIT-SML.png'
 }
