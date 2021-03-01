@@ -1,10 +1,28 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="style.css" type="text/css" />
-    </head>
-    <body>
-        <p id="speedLimit">55</p>
-        <img src="/html/SPEED-LIMIT-SML.png" width="75" height="98.25" id="speedLimitSign" />
-        <script src="./index.js" type="text/javascript"></script>
-    </body>
+
+<head>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<style>
+    #speedLimit {
+        position: absolute;
+        top: 940px; left: 308px; z-index: 1;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 50px;
+        opacity: 0.85;
+        }
+
+        #speedLimitSign {
+        position: absolute;
+        top: 950px; left: 300px;
+        opacity: 0.85;
+        }
+</style>
+
+<body>
+    <p id="speedLimit">55</p>
+    <img src="/html/SPEED-LIMIT-SML.png" width="75" height="98.25" id="speedLimitSign" />
+    <script src="./index.js" type="text/javascript"></script>
+</body>
+
 </html>
