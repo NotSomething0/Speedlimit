@@ -223,47 +223,47 @@ local speedLimit
 local playerPed
 
 RegisterCommand('+speedLimit', function(source, args, rawCommand)
-    if IsPedInAnyVehicle(playerPed) then
-        shouldShowSpeedlimit = not shouldShowSpeedlimit
-        SendNUIMessage({
-            hudStatus = shouldShowSpeedlimit,
-            limit = speedLimit,
-        })
-    end
+  if IsPedInAnyVehicle(playerPed) then
+    shouldShowSpeedlimit = not shouldShowSpeedlimit
+    SendNUIMessage({
+      hudStatus = shouldShowSpeedlimit,
+      limit = speedLimit,
+    })
+  end
 end, false)
 
 RegisterKeyMapping('+speedLimit', 'Toggle speed limit', 'keyboard', 'b')
 
 
 CreateThread(function()
-    while true do
-        Wait(1500)
-        local playerCoords = GetEntityCoords(playerPed)
-        local streethash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
-        local street = GetStreetNameFromHashKey(streethash)
-    
-        if speedLimits[street] then
-            speedLimit = speedLimits[street]
-        else
-            speedLimit = '55'
-        end
-        playerPed = PlayerPedId()
+  while true do
+    Wait(1500)
+    local playerCoords = GetEntityCoords(playerPed)
+    local streethash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
+    local street = GetStreetNameFromHashKey(streethash)
+
+    if speedLimits[street] then
+      speedLimit = speedLimits[street]
+    else
+      speedLimit = '55'
     end
+    playerPed = PlayerPedId()
+  end
 end)
 
 CreateThread(function()
-    while true do
-        if IsPedInAnyVehicle(playerPed) and shouldShowSpeedlimit and IsPauseMenuActive() == false then
-            SendNUIMessage({
-                limit = speedLimit,
-                hudStatus = shouldShowSpeedlimit,
-            })
-        else
-            SendNUIMessage({
-                hudStatus = false,
-            })
-            Wait(1000)
-        end
-        Wait(500)
+  while true do
+    if IsPedInAnyVehicle(playerPed) and shouldShowSpeedlimit and IsPauseMenuActive() == false then
+      SendNUIMessage({
+        limit = speedLimit,
+        hudStatus = shouldShowSpeedlimit,
+      })
+    else
+      SendNUIMessage({
+        hudStatus = false,
+      })
+      Wait(1000)
     end
+    Wait(500)
+  end
 end)
