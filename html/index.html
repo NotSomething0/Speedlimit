@@ -1,45 +1,49 @@
-<html>
-<head>
-  <link rel="stylesheet" href="style.css" type="text/css"/>
-  <script>
-    const speedLimit = document.getgetElementById('speedLimit');
-    window.addEventListener('message', function(event) => {
-      const data = evemt.data;
-      if (data.hudStatus == true) {
-        speedLimit.style.display = 'block';
-      } else {
-        speedLimit.style.display = 'none';
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script>
+      const speedLimit = document.getElementById('speedLimit');
+      window.addEventListener('message', function(event) => {
+        const data = event.data;
+        if (data.hudStatus == true) {
+          speedLimit.style.display = 'block';
+        } else {
+          speedLimit.style.display = 'none';
+        }
+
+        let speed = data.limit
+        if (data.limit && data.limit != speed) {
+          const speedElement = document.getElementById('speedText');
+          speedElement.innerText = data.limit;
+          speed = data.limit;
+        }
+      });
+    </script>
+
+    <style>
+      #speedLimit {
+        position: absolute;
+        top: 940px; left: 308px; z-index: 1;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 50px;
+        opacity: 0.85;
       }
-
-      let speed = data.limit
-      if (data.limit && data.limit != speed) {
-        const speedElement = document.getElementById('speedText');
-        speedElement.innerText = data.limit;
-        speed = data.limit;
+      #speedLimitSign {
+        position: absolute;
+        top: 950px; left: 300px;
+        opacity: 0.85;
       }
-    });
-  </script>
+    </style>
 
-  <style>
-    #speedLimit {
-      position: absolute;
-      top: 940px; left: 308px; z-index: 1;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      font-size: 50px;
-      opacity: 0.85;
-    }
-    #speedLimitSign {
-      position: absolute;
-      top: 950px; left: 300px;
-      opacity: 0.85;
-    }
-  </style>
+  </head>
+  <body>
 
-</head>
-<body>
-  <div id="speedLimit">
-    <p id="speedText"></p>
-    <img src="/html/SPEED-LIMIT-SML.png" width="75" height="98.25"/>
-  </div>
-</body>
+    <div id="speedLimit">
+      <p id="speedText"></p>
+      <img src="/html/SPEED-LIMIT-SML.png" width="75" height="98.25"/>
+    </div>
+
+  </body>
 </html>
