@@ -7,7 +7,7 @@
       const speedLimit = document.getElementById('speedLimit');
       window.addEventListener('message', function(event) => {
         const data = event.data;
-        if (data.hudStatus == true) {
+        if (data.status == true) {
           speedLimit.style.display = 'block';
         } else {
           speedLimit.style.display = 'none';
