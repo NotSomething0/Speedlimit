@@ -229,13 +229,13 @@ local speedLimits = {
 
 local speedLimit
 local showLimit = true
+local hidden = false
 
 RegisterCommand('speedLimit', function()
   if IsPedInAnyVehicle(PlayerPedId()) then
     showLimit = not showLimit
     SendNUIMessage({
-      status = showLimit,
-      limit = speedLimit,
+      status = showLimit
     })
   end
 end, false)
@@ -246,26 +246,43 @@ CreateThread(function()
   while true do
     Wait(500)
     local playerPed = PlayerPedId()
-    local coords = GetEntityCoords(playerPed)
-    local streetHash = GetStreetNameAtCoord(coords)
+    local playerCoords = GetEntityCoords(playerPed)
+    local streetHash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
     local street = GetStreetNameFromHashKey(streetHash)
 
-    if speedLimits[street] then
-      speedLimit = speedLimits[street]
-    else
+    if (not speedLimits[street]) then
       speedLimit = '55'
     end
 
-    if IsPedInAnyVehicle(playerPed) and showLimit and not IsPauseMenuActive() then
+    speedLimit = speedLimits[street]
+
+    if (hidden) then
       SendNUIMessage({
-        limit = speedLimit,
-        status = showLimit,
+        limit = speedLimit
       })
     else
       SendNUIMessage({
-        status = false,
+        limit = speedLimit,
+        status = showLimit
       })
-      Wait(1000)
+    end
+  end
+end)
+
+CreateThread(function()
+  while true do
+    Wait(0)
+    
+    if (not IsPedInAnyVehicle(PlayerPedId()) or IsPauseMenuActive()) then
+      if (not hidden) then
+        SendNUIMessage({
+          staus = false
+        })
+      end
+
+      hidden = true
+    else
+      hidden = false
     end
   end
 end)

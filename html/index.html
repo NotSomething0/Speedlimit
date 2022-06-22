@@ -2,48 +2,59 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css" type="text/css"/>
     <script>
-      const speedLimit = document.getElementById('speedLimit');
-      window.addEventListener('message', function(event) => {
-        const data = event.data;
-        if (data.status == true) {
-          speedLimit.style.display = 'block';
-        } else {
-          speedLimit.style.display = 'none';
-        }
+      window.addEventListener('load', () => {
+        const sign = document.getElementById('root');
+        let oldLimit = '55';
 
-        let speed = data.limit
-        if (data.limit && data.limit != speed) {
-          const speedElement = document.getElementById('speedText');
-          speedElement.innerText = data.limit;
-          speed = data.limit;
-        }
-      });
+        window.addEventListener('message', (event) => {
+          const data = event.data;
+
+          if (data.status == true) {
+            sign.style.display = 'block'
+          }
+
+          if (!data.status) {
+            sign.style.display = 'none'
+          }
+
+          let limit = data.limit
+
+          if (data.limit && data.limit != oldLimit) {
+            const speed = document.getElementById('speed');
+
+            speed.innerText = data.limit;
+            oldLimit = data.limit;
+          }
+        });
+      })
     </script>
 
     <style>
-      #speedLimit {
+      body {
+        /*Not even sure why their is overflow but ok*/
+        overflow: hidden;
+      }
+
+      #root {
         position: absolute;
-        top: 940px; left: 308px; z-index: 1;
+        top: 940px; left:320px; z-index: 1;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         font-size: 50px;
         opacity: 0.85;
       }
-      #speedLimitSign {
-        position: absolute;
-        top: 950px; left: 300px;
+
+      #limitImage {
+        position: fixed;
+        top: 930px; left: 300px; z-index: -1;
         opacity: 0.85;
       }
     </style>
-
   </head>
   <body>
-
-    <div id="speedLimit">
-      <p id="speedText"></p>
-      <img src="/html/SPEED-LIMIT-SML.png" width="75" height="98.25"/>
+    <div id="root">
+      <p id="speed">55</p>
+      <img id="limitImage" src="/html/SPEED-LIMIT-SML.png"/>
     </div>
-
   </body>
 </html>
